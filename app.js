@@ -63,9 +63,9 @@ let appData = loadData();
 // ============================================
 
 const ICONS = {
-    folder: 'icons/Folders.png',
-    tabs: 'icons/Tabs.png',
-    note: 'icons/Notes.png'
+    folder: 'vintage icons/files_vintage.webp',
+    tabs: 'vintage icons/tabs_vintage.webp',
+    note: 'vintage icons/pen_vintage.webp'
 };
 
 // ============================================

@@ -1,16 +1,20 @@
-/* CSS Variables */
+/* CSS Variables - Vintage Theme */
 :root {
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #1a1a1a;
-    --bg-card: #151515;
-    --accent: #8b1538;
-    --accent-light: #a61c43;
-    --accent-glow: rgba(139, 21, 56, 0.4);
-    --text-primary: #ffffff;
-    --text-secondary: #888888;
-    --border-color: #8b1538;
-    --danger: #dc3545;
-    --success: #28a745;
+    --bg-primary: #0a1628;
+    --bg-secondary: #12203a;
+    --bg-card: #162440;
+    --accent: #c9a227;
+    --accent-light: #d4b445;
+    --accent-glow: rgba(201, 162, 39, 0.3);
+    --text-primary: #f0e6d3;
+    --text-secondary: #8b9bb4;
+    --border-color: #c9a227;
+    --danger: #a63d3d;
+    --success: #4a7c59;
+    --vintage-gold: #c9a227;
+    --vintage-bronze: #8b6914;
+    --deep-navy: #0a1628;
+    --slate-blue: #2a4066;
 }
 
 /* Reset */
@@ -42,7 +46,7 @@ body {
     overflow: hidden;
 }
 
-/* Circuit Background */
+/* Vintage Background */
 .circuit-bg {
     position: fixed;
     top: 0;
@@ -52,22 +56,11 @@ body {
     pointer-events: none;
     z-index: 0;
     background-color: var(--bg-primary);
-    background-image:
-        linear-gradient(var(--accent-glow) 1px, transparent 1px),
-        linear-gradient(90deg, var(--accent-glow) 1px, transparent 1px),
-        linear-gradient(45deg, transparent 48%, var(--accent-glow) 49%, var(--accent-glow) 51%, transparent 52%),
-        linear-gradient(-45deg, transparent 48%, var(--accent-glow) 49%, var(--accent-glow) 51%, transparent 52%);
-    background-size:
-        60px 60px,
-        60px 60px,
-        120px 120px,
-        120px 120px;
-    background-position:
-        -1px -1px,
-        -1px -1px,
-        0 0,
-        60px 0;
-    opacity: 0.3;
+    background-image: url('background images/background.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 /* Header */
@@ -85,20 +78,21 @@ body {
     width: 44px;
     height: 44px;
     border: 2px solid var(--accent);
-    border-radius: 8px;
-    background: transparent;
+    border-radius: 4px;
+    background: var(--bg-secondary);
     color: var(--accent);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
 }
 
 .header-btn:hover {
     background: var(--accent);
-    color: var(--text-primary);
-    box-shadow: 0 0 15px var(--accent-glow);
+    color: var(--deep-navy);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6), 0 0 15px var(--accent-glow);
 }
 
 .header-btn svg {
@@ -138,8 +132,8 @@ body {
     flex-shrink: 0;
     padding: 10px 20px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -148,18 +142,21 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 .tab:hover {
     border-color: var(--accent-light);
     color: var(--text-primary);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .tab.active {
     background: var(--accent);
-    border-color: var(--accent);
-    color: var(--text-primary);
-    box-shadow: 0 0 10px var(--accent-glow);
+    border-color: var(--vintage-bronze);
+    color: var(--deep-navy);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.5), 0 0 10px var(--accent-glow);
+    font-weight: 600;
 }
 
 .tab.dragging {
@@ -175,19 +172,22 @@ body {
 
 /* Icon Images */
 .icon-img {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.5));
 }
 
 .icon-img.large {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
+    filter: drop-shadow(3px 3px 4px rgba(0, 0, 0, 0.6));
 }
 
 .icon-img.small {
-    width: 16px;
-    height: 16px;
+    width: 22px;
+    height: 22px;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.4));
 }
 
 /* Main Content */
@@ -210,16 +210,19 @@ body {
     align-items: center;
     gap: 10px;
     margin-bottom: 12px;
-    padding: 8px 12px;
-    background: rgba(139, 21, 56, 0.1);
-    border-radius: 8px;
+    padding: 10px 14px;
+    background: rgba(201, 162, 39, 0.1);
+    border: 1px solid var(--vintage-bronze);
+    border-radius: 4px;
     cursor: pointer;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .folder-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.5));
 }
 
 .folder-name {
@@ -231,20 +234,23 @@ body {
 .folder-options {
     width: 32px;
     height: 32px;
-    border: none;
-    background: transparent;
+    border: 1px solid var(--slate-blue);
+    background: var(--bg-card);
     color: var(--text-secondary);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .folder-options:hover {
     background: var(--accent);
-    color: var(--text-primary);
+    border-color: var(--vintage-bronze);
+    color: var(--deep-navy);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .folder-collapse {
@@ -281,17 +287,18 @@ body {
     position: relative;
     background: var(--bg-card);
     border: 2px solid var(--border-color);
-    border-radius: 16px;
+    border-radius: 4px;
     padding: 16px;
     min-height: 120px;
     cursor: pointer;
     transition: all 0.2s ease;
     overflow: hidden;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 .note-card:hover {
     border-color: var(--accent-light);
-    box-shadow: 0 0 20px var(--accent-glow);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
     transform: translateY(-2px);
 }
 
@@ -335,16 +342,17 @@ body {
     right: 8px;
     width: 28px;
     height: 28px;
-    border: none;
-    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--slate-blue);
+    background: var(--bg-secondary);
     color: var(--text-secondary);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: all 0.2s ease;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .note-card:hover .note-options {
@@ -353,7 +361,9 @@ body {
 
 .note-options:hover {
     background: var(--accent);
-    color: var(--text-primary);
+    border-color: var(--vintage-bronze);
+    color: var(--deep-navy);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 /* Floating Action Button */
@@ -363,12 +373,12 @@ body {
     right: 24px;
     width: 56px;
     height: 56px;
-    border-radius: 50%;
-    border: none;
+    border-radius: 8px;
+    border: 2px solid var(--vintage-bronze);
     background: var(--accent);
-    color: var(--text-primary);
+    color: var(--deep-navy);
     cursor: pointer;
-    box-shadow: 0 4px 20px var(--accent-glow);
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -378,13 +388,14 @@ body {
 
 .fab:hover {
     background: var(--accent-light);
-    transform: scale(1.1);
-    box-shadow: 0 6px 30px var(--accent-glow);
+    transform: scale(1.05);
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.6), 0 0 30px var(--accent-glow);
 }
 
 .fab svg, .fab img {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.4));
 }
 
 /* Modal Styles */
@@ -417,14 +428,14 @@ body {
 .modal-content {
     position: relative;
     background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
     padding: 24px;
     min-width: 300px;
     max-width: 90vw;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 0 40px var(--accent-glow);
+    box-shadow: 6px 6px 20px rgba(0, 0, 0, 0.6), 0 0 40px var(--accent-glow);
 }
 
 .modal-content h3 {
@@ -441,43 +452,49 @@ body {
     padding: 14px 16px;
     margin-bottom: 8px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 16px;
     font-family: inherit;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 .modal-option:hover {
     background: var(--accent);
-    border-color: var(--accent);
+    border-color: var(--vintage-bronze);
+    color: var(--deep-navy);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .modal-option .option-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
+    filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.5));
 }
 
 .modal-cancel {
     width: 100%;
     padding: 14px 16px;
     margin-top: 8px;
-    background: transparent;
-    border: 1px solid var(--text-secondary);
-    border-radius: 8px;
+    background: var(--bg-card);
+    border: 2px solid var(--text-secondary);
+    border-radius: 4px;
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 16px;
     font-family: inherit;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 .modal-cancel:hover {
     border-color: var(--text-primary);
     color: var(--text-primary);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Note Editor */
@@ -494,19 +511,20 @@ body {
     padding: 12px 16px;
     margin-bottom: 12px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     color: var(--text-primary);
     font-size: 18px;
     font-weight: 600;
     font-family: inherit;
     flex-shrink: 0;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .note-title-input:focus {
     outline: none;
     border-color: var(--accent-light);
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px var(--accent-glow);
 }
 
 /* Editor Toolbar - Sticky */
@@ -515,14 +533,15 @@ body {
     flex-wrap: wrap;
     gap: 4px;
     padding: 8px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px 8px 0 0;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 4px 4px 0 0;
     border-bottom: none;
     flex-shrink: 0;
     position: sticky;
     top: 0;
     z-index: 10;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .toolbar-group {
@@ -540,9 +559,9 @@ body {
 .toolbar-btn {
     width: 32px;
     height: 32px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    background: transparent;
+    border: 1px solid var(--slate-blue);
+    border-radius: 3px;
+    background: var(--bg-card);
     color: var(--text-secondary);
     cursor: pointer;
     display: flex;
@@ -552,17 +571,20 @@ body {
     font-family: inherit;
     font-size: 14px;
     font-weight: 600;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .toolbar-btn:hover {
     background: var(--accent-glow);
     color: var(--text-primary);
     border-color: var(--accent);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .toolbar-btn.active {
     background: var(--accent);
-    color: var(--text-primary);
+    color: var(--deep-navy);
+    border-color: var(--vintage-bronze);
 }
 
 .toolbar-btn svg {
@@ -608,11 +630,11 @@ body {
     margin-top: 4px;
     padding: 8px;
     background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     display: none;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.6);
 }
 
 .color-dropdown.active {
@@ -628,15 +650,17 @@ body {
 .color-swatch {
     width: 24px;
     height: 24px;
-    border-radius: 4px;
+    border-radius: 2px;
     border: 2px solid transparent;
     cursor: pointer;
     transition: all 0.15s ease;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .color-swatch:hover {
     transform: scale(1.1);
-    border-color: var(--text-primary);
+    border-color: var(--accent);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 /* Font Selector */
@@ -648,8 +672,8 @@ body {
     min-width: 100px;
     height: 32px;
     padding: 0 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border: 2px solid var(--border-color);
+    border-radius: 3px;
     background: var(--bg-card);
     color: var(--text-secondary);
     cursor: pointer;
@@ -659,11 +683,13 @@ body {
     gap: 4px;
     font-size: 12px;
     transition: all 0.15s ease;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .font-selector-btn:hover {
     border-color: var(--accent);
     color: var(--text-primary);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .font-dropdown {
@@ -673,11 +699,11 @@ body {
     right: 0;
     margin-top: 4px;
     background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     display: none;
     z-index: 100;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.6);
     max-height: 200px;
     overflow-y: auto;
 }
@@ -699,7 +725,8 @@ body {
 
 .font-option.active {
     background: var(--accent);
-    color: var(--text-primary);
+    color: var(--deep-navy);
+    font-weight: 600;
 }
 
 /* Editor Wrapper for scrolling */
@@ -718,18 +745,20 @@ body {
     flex: 1;
     padding: 12px 16px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 0 0 8px 8px;
+    border: 2px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
     color: var(--text-primary);
     font-size: 14px;
     overflow-y: auto;
     outline: none;
     line-height: 1.6;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .note-content-editor:focus {
     border-color: var(--accent-light);
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2), 0 0 10px var(--accent-glow);
 }
 
 .note-content-editor:empty::before {
@@ -801,30 +830,34 @@ body {
 .preview-close {
     width: 32px;
     height: 32px;
-    border: none;
-    background: transparent;
+    border: 2px solid var(--text-secondary);
+    background: var(--bg-card);
     color: var(--text-secondary);
     font-size: 24px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 3px;
     transition: all 0.2s ease;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .preview-close:hover {
     background: var(--accent);
-    color: var(--text-primary);
+    border-color: var(--vintage-bronze);
+    color: var(--deep-navy);
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 .preview-content {
     padding: 16px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     min-height: 150px;
     max-height: 50vh;
     overflow-y: auto;
     word-break: break-word;
     line-height: 1.6;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Headings inside preview - always left aligned */
@@ -861,54 +894,72 @@ body {
 /* Buttons */
 .btn {
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 3px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     flex: 1;
     font-family: inherit;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.btn:hover {
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6);
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .btn-cancel {
-    background: transparent;
-    border: 1px solid var(--text-secondary);
+    background: var(--bg-card);
+    border: 2px solid var(--slate-blue);
     color: var(--text-secondary);
 }
 
 .btn-cancel:hover {
-    border-color: var(--text-primary);
+    background: var(--slate-blue);
+    border-color: var(--text-secondary);
     color: var(--text-primary);
 }
 
 .btn-save {
     background: var(--accent);
-    border: 1px solid var(--accent);
-    color: var(--text-primary);
+    border: 2px solid var(--vintage-bronze);
+    color: var(--deep-navy);
 }
 
 .btn-save:hover {
     background: var(--accent-light);
-    border-color: var(--accent-light);
+    border-color: var(--accent);
 }
 
 .btn-delete {
-    background: var(--danger);
-    border: 1px solid var(--danger);
-    color: var(--text-primary);
+    background: var(--bg-card);
+    border: 2px solid var(--danger);
+    color: var(--danger);
 }
 
 .btn-delete:hover {
-    background: #c82333;
-    border-color: #c82333;
+    background: var(--danger);
+    border-color: #8b2e2e;
+    color: var(--text-primary);
 }
 
 .btn-edit {
     background: var(--accent);
-    border: 1px solid var(--accent);
-    color: var(--text-primary);
+    border: 2px solid var(--vintage-bronze);
+    color: var(--deep-navy);
     flex: none;
     padding: 10px 20px;
+}
+
+.btn-edit:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
 }
 
 /* Delete Confirm */
@@ -929,17 +980,18 @@ body {
     padding: 12px 16px;
     margin-bottom: 16px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     color: var(--text-primary);
     font-size: 16px;
     font-family: inherit;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .input-field:focus {
     outline: none;
     border-color: var(--accent-light);
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px var(--accent-glow);
 }
 
 .input-actions {
@@ -961,17 +1013,20 @@ body {
     padding: 12px 16px;
     margin-bottom: 8px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
     color: var(--text-primary);
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 .move-option:hover {
     background: var(--accent);
-    border-color: var(--accent);
+    border-color: var(--vintage-bronze);
+    color: var(--deep-navy);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* Empty State */
@@ -982,10 +1037,11 @@ body {
 }
 
 .empty-state-icon {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     margin: 0 auto 16px;
-    opacity: 0.5;
+    opacity: 0.6;
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.5));
 }
 
 .empty-state p {
