@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Campaign Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Circuit Background Pattern -->
+        <div class="circuit-bg"></div>
+
+        <!-- Header -->
+        <header class="header">
+            <button class="header-btn add-btn" id="addBtn" title="Add New">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+            <div class="header-right">
+                <button class="header-btn view-btn" id="gridViewBtn" title="Grid View">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                    </svg>
+                </button>
+                <button class="header-btn view-btn" id="listViewBtn" title="List View">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Tabs Container -->
+        <div class="tabs-container" id="tabsContainer">
+            <!-- Tabs will be rendered here -->
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="mainContent">
+            <!-- Folders and Notes will be rendered here -->
+        </main>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="fabBtn" title="New Note">
+            <img src="icons/Notes.png" alt="New Note" class="icon-img">
+        </button>
+    </div>
+
+    <!-- Add Menu Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h3>Create New</h3>
+            <button class="modal-option" data-action="new-tab">
+                <img src="icons/Tabs.png" alt="Tab" class="option-icon"> New Tab
+            </button>
+            <button class="modal-option" data-action="new-folder">
+                <img src="icons/Folders.png" alt="Folder" class="option-icon"> New Folder
+            </button>
+            <button class="modal-option" data-action="new-note">
+                <img src="icons/Notes.png" alt="Note" class="option-icon"> New Note
+            </button>
+            <button class="modal-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Note Editor Modal -->
+    <div class="modal" id="noteModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content note-editor">
+            <input type="text" class="note-title-input" id="noteTitleInput" placeholder="Note Title">
+
+            <!-- Rich Text Editor Toolbar -->
+            <div class="editor-toolbar">
+                <!-- Font Selector -->
+                <div class="toolbar-group">
+                    <div class="font-selector">
+                        <button class="font-selector-btn" id="fontSelectorBtn">
+                            <span id="currentFont">Garamond</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                        <div class="font-dropdown" id="fontDropdown">
+                            <div class="font-option active" data-font="garamond" style="font-family: Garamond, serif;">Garamond</div>
+                            <div class="font-option" data-font="arial" style="font-family: Arial, sans-serif;">Arial</div>
+                            <div class="font-option" data-font="times" style="font-family: 'Times New Roman', serif;">Times New Roman</div>
+                            <div class="font-option" data-font="courier" style="font-family: 'Courier New', monospace;">Courier New</div>
+                            <div class="font-option" data-font="georgia" style="font-family: Georgia, serif;">Georgia</div>
+                            <div class="font-option" data-font="verdana" style="font-family: Verdana, sans-serif;">Verdana</div>
+                            <div class="font-option" data-font="trebuchet" style="font-family: 'Trebuchet MS', sans-serif;">Trebuchet MS</div>
+                            <div class="font-option" data-font="palatino" style="font-family: 'Palatino Linotype', serif;">Palatino</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Formatting -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-command="bold" title="Bold (Ctrl+B)">
+                        <strong>B</strong>
+                    </button>
+                    <button class="toolbar-btn" data-command="italic" title="Italic (Ctrl+I)">
+                        <em>I</em>
+                    </button>
+                    <button class="toolbar-btn" data-command="underline" title="Underline (Ctrl+U)">
+                        <u>U</u>
+                    </button>
+                    <button class="toolbar-btn" data-command="strikeThrough" title="Strikethrough">
+                        <s>S</s>
+                    </button>
+                </div>
+
+                <!-- Headers -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-command="formatBlock" data-value="h1" title="Heading 1">
+                        H1
+                    </button>
+                    <button class="toolbar-btn" data-command="formatBlock" data-value="h2" title="Heading 2">
+                        H2
+                    </button>
+                    <button class="toolbar-btn" data-command="formatBlock" data-value="h3" title="Heading 3">
+                        H3
+                    </button>
+                    <button class="toolbar-btn" data-command="formatBlock" data-value="p" title="Paragraph">
+                        P
+                    </button>
+                </div>
+
+                <!-- Lists -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="9" y1="6" x2="20" y2="6"></line>
+                            <line x1="9" y1="12" x2="20" y2="12"></line>
+                            <line x1="9" y1="18" x2="20" y2="18"></line>
+                            <circle cx="4" cy="6" r="2" fill="currentColor"></circle>
+                            <circle cx="4" cy="12" r="2" fill="currentColor"></circle>
+                            <circle cx="4" cy="18" r="2" fill="currentColor"></circle>
+                        </svg>
+                    </button>
+                    <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="10" y1="6" x2="21" y2="6"></line>
+                            <line x1="10" y1="12" x2="21" y2="12"></line>
+                            <line x1="10" y1="18" x2="21" y2="18"></line>
+                            <text x="3" y="8" font-size="8" fill="currentColor">1</text>
+                            <text x="3" y="14" font-size="8" fill="currentColor">2</text>
+                            <text x="3" y="20" font-size="8" fill="currentColor">3</text>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Text Alignment -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-command="justifyLeft" title="Align Left">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="15" y2="12"></line>
+                            <line x1="3" y1="18" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="toolbar-btn" data-command="justifyCenter" title="Align Center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="6" y1="12" x2="18" y2="12"></line>
+                            <line x1="4" y1="18" x2="20" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="toolbar-btn" data-command="justifyRight" title="Align Right">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="9" y1="12" x2="21" y2="12"></line>
+                            <line x1="6" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="toolbar-btn" data-command="justifyFull" title="Justify">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Text Color -->
+                <div class="toolbar-group">
+                    <div class="color-picker-wrapper">
+                        <button class="color-picker-btn" id="textColorBtn" title="Text Color">
+                            <div class="color-indicator" id="textColorIndicator" style="background: #ffffff;"></div>
+                        </button>
+                        <div class="color-dropdown" id="textColorDropdown">
+                            <div class="color-grid" id="textColorGrid">
+                                <!-- Colors will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="color-picker-wrapper">
+                        <button class="color-picker-btn" id="highlightBtn" title="Highlight Color">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" fill="var(--highlight-color, yellow)"></path>
+                            </svg>
+                        </button>
+                        <div class="color-dropdown" id="highlightDropdown">
+                            <div class="color-grid" id="highlightColorGrid">
+                                <!-- Colors will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clear Formatting -->
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="4" y1="4" x2="20" y2="20"></line>
+                            <path d="M4 7h7m4 0h5M9 7v8"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rich Text Content Area -->
+            <div class="note-content-editor font-garamond"
+                 id="noteContentEditor"
+                 contenteditable="true"
+                 data-placeholder="Write your note..."></div>
+
+            <div class="note-editor-actions">
+                <button class="btn btn-cancel" id="noteCancelBtn">Cancel</button>
+                <button class="btn btn-save" id="noteSaveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content note-preview">
+            <div class="preview-header">
+                <h3 id="previewTitle">Note Title</h3>
+                <button class="preview-close" id="previewCloseBtn">&times;</button>
+            </div>
+            <div class="preview-content" id="previewContent"></div>
+            <div class="preview-actions">
+                <button class="btn btn-edit" id="previewEditBtn">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Options Menu Modal -->
+    <div class="modal" id="optionsModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content options-menu">
+            <h3 id="optionsTitle">Options</h3>
+            <div id="optionsContent">
+                <!-- Dynamic options will be inserted here -->
+            </div>
+            <button class="modal-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Move To Modal -->
+    <div class="modal" id="moveModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content move-menu">
+            <h3 id="moveTitle">Move To</h3>
+            <div class="move-options" id="moveOptions">
+                <!-- Dynamic move options will be inserted here -->
+            </div>
+            <button class="modal-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content delete-confirm">
+            <h3>Confirm Delete</h3>
+            <p id="deleteMessage">Are you sure you want to delete this item?</p>
+            <div class="delete-actions">
+                <button class="btn btn-cancel" id="deleteCancelBtn">Cancel</button>
+                <button class="btn btn-delete" id="deleteConfirmBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input Modal (for naming tabs/folders) -->
+    <div class="modal" id="inputModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content input-dialog">
+            <h3 id="inputTitle">Enter Name</h3>
+            <input type="text" class="input-field" id="inputField" placeholder="Name">
+            <div class="input-actions">
+                <button class="btn btn-cancel" id="inputCancelBtn">Cancel</button>
+                <button class="btn btn-save" id="inputSaveBtn">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
