@@ -375,8 +375,8 @@ body {
     height: 56px;
     border-radius: 8px;
     border: 2px solid var(--vintage-bronze);
-    background: var(--accent);
-    color: var(--deep-navy);
+    background: #12203A;
+    color: var(--text-primary);
     cursor: pointer;
     box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
     display: flex;
