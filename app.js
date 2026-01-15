@@ -447,7 +447,16 @@ function renderTabs() {
              data-tab-id="${tab.id}"
              draggable="true">
             <img src="${ICONS.tabs}" alt="" class="icon-img small">
-            ${escapeHtml(tab.name)}
+            <span class="tab-name">${escapeHtml(tab.name)}</span>
+            ${tab.id === appData.activeTabId ? `
+                <button class="tab-settings-btn" data-action="tab-settings" title="Tab Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="12" cy="5" r="1"></circle>
+                        <circle cx="12" cy="19" r="1"></circle>
+                    </svg>
+                </button>
+            ` : ''}
         </div>
     `).join('');
 
@@ -455,23 +464,21 @@ function renderTabs() {
     elements.tabsContainer.querySelectorAll('.tab').forEach(tabEl => {
         const tabId = tabEl.dataset.tabId;
 
-        // Click to select
+        // Click to select (but not on settings button)
         tabEl.addEventListener('click', (e) => {
-            if (!tabEl.classList.contains('dragging')) {
+            if (!tabEl.classList.contains('dragging') && !e.target.closest('.tab-settings-btn')) {
                 setActiveTab(tabId);
             }
         });
 
-        // Long press for options (mobile)
-        let longPressTimer;
-        tabEl.addEventListener('touchstart', (e) => {
-            longPressTimer = setTimeout(() => {
-                e.preventDefault();
+        // Settings button click
+        const settingsBtn = tabEl.querySelector('.tab-settings-btn');
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 showTabOptions(tabId);
-            }, 500);
-        });
-        tabEl.addEventListener('touchend', () => clearTimeout(longPressTimer));
-        tabEl.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+            });
+        }
 
         // Right click for options (desktop)
         tabEl.addEventListener('contextmenu', (e) => {
@@ -488,7 +495,9 @@ function renderTabs() {
 }
 
 function renderFolders() {
-    const folders = appData.folders.filter(f => f.tabId === appData.activeTabId);
+    const folders = appData.folders
+        .filter(f => f.tabId === appData.activeTabId)
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
 
     if (folders.length === 0) {
         elements.mainContent.innerHTML = `
@@ -505,12 +514,19 @@ function renderFolders() {
         const notes = appData.notes.filter(n => n.folderId === folder.id);
         return `
             <div class="folder" data-folder-id="${folder.id}">
-                <div class="folder-header">
+                <div class="folder-header" draggable="true">
                     <button class="folder-collapse ${folder.collapsed ? 'collapsed' : ''}" data-action="toggle">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
+                    <div class="folder-drag-handle" title="Drag to reorder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <line x1="8" y1="6" x2="16" y2="6"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                            <line x1="8" y1="18" x2="16" y2="18"></line>
+                        </svg>
+                    </div>
                     <img src="${ICONS.folder}" alt="" class="folder-icon">
                     <span class="folder-name">${escapeHtml(folder.name)}</span>
                     <button class="folder-options" data-action="options">
@@ -528,7 +544,7 @@ function renderFolders() {
                                 <p style="font-size: 14px; color: var(--text-secondary);">No notes yet</p>
                             </div>
                         ` : notes.map(note => `
-                            <div class="note-card ${appData.viewMode === 'list' ? 'list-view' : ''}" data-note-id="${note.id}">
+                            <div class="note-card ${appData.viewMode === 'list' ? 'list-view' : ''}" data-note-id="${note.id}" draggable="true">
                                 <button class="note-options" data-action="options">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                                         <circle cx="12" cy="12" r="1"></circle>
@@ -552,10 +568,13 @@ function renderFolders() {
     // Add event listeners for folders
     elements.mainContent.querySelectorAll('.folder').forEach(folderEl => {
         const folderId = folderEl.dataset.folderId;
+        const folderHeader = folderEl.querySelector('.folder-header');
 
-        // Toggle collapse
-        folderEl.querySelector('[data-action="toggle"]').addEventListener('click', () => {
-            toggleFolderCollapse(folderId);
+        // Toggle collapse - clicking anywhere on the folder header (except options and drag handle)
+        folderHeader.addEventListener('click', (e) => {
+            if (!e.target.closest('.folder-options') && !e.target.closest('.folder-drag-handle')) {
+                toggleFolderCollapse(folderId);
+            }
         });
 
         // Folder options
@@ -564,13 +583,93 @@ function renderFolders() {
             showFolderOptions(folderId);
         });
 
+        // Folder drag and drop (for reordering folders)
+        folderHeader.addEventListener('dragstart', (e) => {
+            // Only allow folder drag from the drag handle
+            if (e.target.closest('.folder-drag-handle')) {
+                handleFolderDragStart(e, folderId);
+            } else {
+                e.preventDefault();
+            }
+        });
+        folderHeader.addEventListener('dragend', handleFolderDragEnd);
+
+        // Folder as drop target (for both folders and notes)
+        folderEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (draggedFolderId && draggedFolderId !== folderId) {
+                folderEl.classList.add('drag-over');
+            }
+            if (draggedNoteId) {
+                const note = appData.notes.find(n => n.id === draggedNoteId);
+                if (note && note.folderId !== folderId) {
+                    folderEl.classList.add('note-drag-over');
+                }
+            }
+        });
+        folderEl.addEventListener('dragleave', (e) => {
+            folderEl.classList.remove('drag-over');
+            folderEl.classList.remove('note-drag-over');
+        });
+        folderEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            folderEl.classList.remove('drag-over');
+            folderEl.classList.remove('note-drag-over');
+
+            // Handle folder drop
+            if (draggedFolderId && draggedFolderId !== folderId) {
+                handleFolderDrop(e, folderId);
+            }
+            // Handle note drop
+            if (draggedNoteId) {
+                handleNoteDropOnFolder(e, folderId);
+            }
+        });
+
+        // Touch drag for mobile folders
+        let folderTouchStartY = 0;
+        let isFolderDragging = false;
+
+        const dragHandle = folderHeader.querySelector('.folder-drag-handle');
+        if (dragHandle) {
+            dragHandle.addEventListener('touchstart', (e) => {
+                folderTouchStartY = e.touches[0].clientY;
+                e.stopPropagation();
+            }, { passive: true });
+
+            dragHandle.addEventListener('touchmove', (e) => {
+                const touchY = e.touches[0].clientY;
+                const diff = Math.abs(touchY - folderTouchStartY);
+                if (diff > 10 && !isFolderDragging) {
+                    isFolderDragging = true;
+                    draggedFolderId = folderId;
+                    folderEl.classList.add('dragging');
+                }
+            }, { passive: true });
+
+            dragHandle.addEventListener('touchend', (e) => {
+                if (isFolderDragging) {
+                    isFolderDragging = false;
+                    folderEl.classList.remove('dragging');
+                    const touch = e.changedTouches[0];
+                    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const targetFolder = elementBelow?.closest('.folder');
+                    if (targetFolder && targetFolder !== folderEl) {
+                        const targetFolderId = targetFolder.dataset.folderId;
+                        handleFolderDrop({ preventDefault: () => {}, currentTarget: targetFolder }, targetFolderId);
+                    }
+                    draggedFolderId = null;
+                }
+            });
+        }
+
         // Note events
         folderEl.querySelectorAll('.note-card').forEach(noteEl => {
             const noteId = noteEl.dataset.noteId;
 
-            // Click to preview
+            // Click to preview (but not when dragging)
             noteEl.addEventListener('click', (e) => {
-                if (!e.target.closest('.note-options')) {
+                if (!e.target.closest('.note-options') && !noteEl.classList.contains('dragging')) {
                     openNotePreview(noteId);
                 }
             });
@@ -579,6 +678,53 @@ function renderFolders() {
             noteEl.querySelector('[data-action="options"]').addEventListener('click', (e) => {
                 e.stopPropagation();
                 showNoteOptions(noteId);
+            });
+
+            // Note drag and drop
+            noteEl.addEventListener('dragstart', (e) => handleNoteDragStart(e, noteId));
+            noteEl.addEventListener('dragend', handleNoteDragEnd);
+
+            // Touch drag for mobile notes
+            let noteTouchStartX = 0;
+            let noteTouchStartY = 0;
+            let isNoteDragging = false;
+
+            noteEl.addEventListener('touchstart', (e) => {
+                noteTouchStartX = e.touches[0].clientX;
+                noteTouchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            noteEl.addEventListener('touchmove', (e) => {
+                const touchX = e.touches[0].clientX;
+                const touchY = e.touches[0].clientY;
+                const diffX = Math.abs(touchX - noteTouchStartX);
+                const diffY = Math.abs(touchY - noteTouchStartY);
+                if ((diffX > 15 || diffY > 15) && !isNoteDragging) {
+                    isNoteDragging = true;
+                    draggedNoteId = noteId;
+                    noteEl.classList.add('dragging');
+                    document.querySelectorAll('.folder').forEach(f => f.classList.add('note-drop-target'));
+                }
+            }, { passive: true });
+
+            noteEl.addEventListener('touchend', (e) => {
+                if (isNoteDragging) {
+                    isNoteDragging = false;
+                    noteEl.classList.remove('dragging');
+                    document.querySelectorAll('.folder').forEach(f => {
+                        f.classList.remove('note-drop-target');
+                        f.classList.remove('note-drag-over');
+                    });
+
+                    const touch = e.changedTouches[0];
+                    const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const targetFolder = elementBelow?.closest('.folder');
+                    if (targetFolder) {
+                        const targetFolderId = targetFolder.dataset.folderId;
+                        handleNoteDropOnFolder({ preventDefault: () => {}, currentTarget: targetFolder }, targetFolderId);
+                    }
+                    draggedNoteId = null;
+                }
             });
         });
     });
@@ -735,16 +881,124 @@ function handleTabDrop(e, targetTabId) {
     render();
 }
 
+// Folder drag and drop
+let draggedFolderId = null;
+
+function handleFolderDragStart(e, folderId) {
+    draggedFolderId = folderId;
+    e.target.closest('.folder').classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleFolderDragEnd(e) {
+    e.target.closest('.folder')?.classList.remove('dragging');
+    document.querySelectorAll('.folder').forEach(f => f.classList.remove('drag-over'));
+    draggedFolderId = null;
+}
+
+function handleFolderDragOver(e, folderId) {
+    e.preventDefault();
+    if (draggedFolderId && draggedFolderId !== folderId) {
+        e.currentTarget.classList.add('drag-over');
+    }
+}
+
+function handleFolderDragLeave(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+
+function handleFolderDrop(e, targetFolderId) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+
+    if (!draggedFolderId || draggedFolderId === targetFolderId) return;
+
+    const folders = appData.folders
+        .filter(f => f.tabId === appData.activeTabId)
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    const draggedIndex = folders.findIndex(f => f.id === draggedFolderId);
+    const targetIndex = folders.findIndex(f => f.id === targetFolderId);
+
+    if (draggedIndex === -1 || targetIndex === -1) return;
+
+    // Reorder
+    const [draggedFolder] = folders.splice(draggedIndex, 1);
+    folders.splice(targetIndex, 0, draggedFolder);
+
+    // Update order values
+    folders.forEach((folder, index) => {
+        folder.order = index;
+    });
+
+    saveData();
+    render();
+}
+
+// Note drag and drop (between folders)
+let draggedNoteId = null;
+
+function handleNoteDragStart(e, noteId) {
+    draggedNoteId = noteId;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    // Add class to all folders to indicate they are drop targets
+    document.querySelectorAll('.folder').forEach(f => f.classList.add('note-drop-target'));
+}
+
+function handleNoteDragEnd(e) {
+    e.target.classList.remove('dragging');
+    document.querySelectorAll('.folder').forEach(f => {
+        f.classList.remove('note-drop-target');
+        f.classList.remove('note-drag-over');
+    });
+    draggedNoteId = null;
+}
+
+function handleNoteDragOverFolder(e, folderId) {
+    e.preventDefault();
+    if (draggedNoteId) {
+        const note = appData.notes.find(n => n.id === draggedNoteId);
+        if (note && note.folderId !== folderId) {
+            e.currentTarget.classList.add('note-drag-over');
+        }
+    }
+}
+
+function handleNoteDragLeaveFolder(e) {
+    e.currentTarget.classList.remove('note-drag-over');
+}
+
+function handleNoteDropOnFolder(e, targetFolderId) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('note-drag-over');
+
+    if (!draggedNoteId) return;
+
+    const note = appData.notes.find(n => n.id === draggedNoteId);
+    if (note && note.folderId !== targetFolderId) {
+        note.folderId = targetFolderId;
+        saveData();
+        render();
+    }
+}
+
 // ============================================
 // FOLDER OPERATIONS
 // ============================================
 
 function createFolder(name) {
+    const existingFolders = appData.folders.filter(f => f.tabId === appData.activeTabId);
+    const maxOrder = existingFolders.length > 0
+        ? Math.max(...existingFolders.map(f => f.order || 0))
+        : -1;
+
     const newFolder = {
         id: generateId('folder'),
         name: name,
         tabId: appData.activeTabId,
-        collapsed: false
+        collapsed: false,
+        order: maxOrder + 1
     };
     appData.folders.push(newFolder);
     saveData();

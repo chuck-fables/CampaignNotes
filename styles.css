@@ -170,6 +170,37 @@ body {
     color: var(--accent);
 }
 
+/* Tab Settings Button */
+.tab-settings-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-left: 4px;
+    transition: all 0.15s ease;
+    opacity: 0.7;
+}
+
+.tab-settings-btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 1;
+}
+
+.tab.active .tab-settings-btn {
+    color: var(--deep-navy);
+}
+
+.tab.active .tab-settings-btn:hover {
+    background: rgba(0, 0, 0, 0.15);
+}
+
 /* Icon Images */
 .icon-img {
     width: 28px;
@@ -265,6 +296,61 @@ body {
 
 .folder-collapse.collapsed {
     transform: rotate(-90deg);
+}
+
+/* Folder Drag Handle */
+.folder-drag-handle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: grab;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.folder-drag-handle:hover {
+    opacity: 1;
+}
+
+.folder-drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Folder Dragging States */
+.folder.dragging {
+    opacity: 0.5;
+}
+
+.folder.drag-over {
+    border: 2px dashed var(--accent);
+    border-radius: 4px;
+}
+
+.folder.drag-over .folder-header {
+    background: var(--accent-glow);
+}
+
+/* Note Card Dragging */
+.note-card.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+.note-card[draggable="true"] {
+    cursor: grab;
+}
+
+.note-card[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+/* Folder Drop Target for Notes */
+.folder.note-drag-over .folder-header {
+    background: var(--accent-glow);
+    border-color: var(--accent);
 }
 
 /* Notes Grid */
