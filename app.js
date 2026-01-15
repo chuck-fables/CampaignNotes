@@ -130,6 +130,7 @@ const elements = {
     noteContentEditor: document.getElementById('noteContentEditor'),
     noteSaveBtn: document.getElementById('noteSaveBtn'),
     noteCancelBtn: document.getElementById('noteCancelBtn'),
+    fullscreenToggle: document.getElementById('fullscreenToggle'),
     // Font selector
     fontSelectorBtn: document.getElementById('fontSelectorBtn'),
     fontDropdown: document.getElementById('fontDropdown'),
@@ -934,6 +935,17 @@ function openNoteEditor(noteId = null, folderId = null) {
         setEditorFont('garamond');
     }
 
+    // Restore fullscreen preference (desktop only)
+    const noteEditor = elements.noteModal.querySelector('.note-editor');
+    const isFullscreen = localStorage.getItem('editorFullscreen') === 'true';
+    if (isFullscreen && window.innerWidth > 480) {
+        noteEditor.classList.add('fullscreen');
+        elements.fullscreenToggle.classList.add('active');
+    } else {
+        noteEditor.classList.remove('fullscreen');
+        elements.fullscreenToggle.classList.remove('active');
+    }
+
     openModal(elements.noteModal);
     elements.noteTitleInput.focus();
 }
@@ -1138,6 +1150,15 @@ elements.noteCancelBtn.addEventListener('click', () => {
     closeAllModals();
     currentEditingNoteId = null;
     currentNoteFolder = null;
+});
+
+// Fullscreen toggle for note editor (desktop only)
+elements.fullscreenToggle.addEventListener('click', () => {
+    const noteEditor = elements.noteModal.querySelector('.note-editor');
+    noteEditor.classList.toggle('fullscreen');
+    elements.fullscreenToggle.classList.toggle('active');
+    // Save preference to localStorage
+    localStorage.setItem('editorFullscreen', noteEditor.classList.contains('fullscreen'));
 });
 
 // Preview modal
